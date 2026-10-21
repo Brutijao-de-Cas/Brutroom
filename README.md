@@ -1,75 +1,77 @@
 # Brutroom
 
-**Your friends. Your screen. Your room.**
+Salas temporárias para compartilhar a tela com outras pessoas por um link. O navegador captura a tela somente depois que o anfitrião escolhe **Compartilhar tela** e concede permissão.
 
-O **Brutroom** é um projeto de comunicação criado para aproximar amigos em um único lugar. A proposta é oferecer uma maneira simples e moderna de compartilhar a tela, conversar por voz e utilizar a câmera em salas privadas.
+## Funcionalidades
 
-Com uma interface minimalista e foco na praticidade, o Brutroom busca tornar mais fácil jogar, assistir a conteúdos, estudar ou simplesmente passar um tempo com os amigos.
+- Criar salas com código aleatório e link de convite.
+- Entrar por link ou código, copiar o convite e sair da sala.
+- Compartilhar e encerrar a tela; detectar quando a captura é interrompida pelo navegador.
+- Assistir como espectador, sem controles de captura.
+- Usar WebRTC para mídia e WebSocket para sinalização.
+- Configurar STUN e TURN por variáveis de ambiente. Credenciais TURN de curta duração são geradas no servidor.
+- Encerrar a sala pelo anfitrião e limpar salas após expiração ou desconexão prolongada.
 
-## ✨ Funcionalidades planejadas
+## Requisitos
 
-- 🖥️ **Compartilhamento de tela:** transmita sua tela ou uma janela específica.
-- 🎙️ **Chat de voz:** converse em tempo real com os participantes da sala.
-- 📹 **Câmera:** compartilhe vídeo durante as conversas.
-- 🚪 **Salas privadas:** crie espaços para reunir seus amigos.
-- 🔗 **Convites por link:** facilite a entrada de novos participantes.
-- 👥 **Gerenciamento de participantes:** visualize quem está conectado à sala.
-- 🎨 **Interface minimalista:** navegação simples, moderna e intuitiva.
-- ⚡ **Baixa latência:** priorize uma comunicação fluida e responsiva.
+- Node.js 22.9 ou mais recente; Node.js 24 LTS é recomendado. npm vem com Node.js.
+- Navegador moderno com suporte a `getDisplayMedia`, WebRTC e WebSocket. A permissão de captura depende do navegador e do sistema operacional.
+- HTTPS para uso fora de `localhost`.
 
-*As funcionalidades listadas são objetivos do projeto e podem ainda não estar implementadas.*
+Não há dependências npm externas. Servidor HTTP, sinalização WebSocket e interface usam APIs nativas do Node.js e do navegador.
 
-## 🎯 Objetivos do projeto
+## Instalação e execução
 
-- Simplificar o compartilhamento de tela entre amigos.
-- Reunir voz, vídeo e transmissão de tela em uma única aplicação.
-- Oferecer uma alternativa leve e intuitiva para comunicação em grupo.
-- Priorizar desempenho, estabilidade e facilidade de utilização.
-- Manter uma arquitetura flexível para futuras melhorias.
+```bash
+node --version
+npm start
+```
 
-## 🛠️ Tecnologias
+Abra [http://localhost:3000](http://localhost:3000). Para reiniciar o servidor automaticamente durante desenvolvimento:
 
-A stack tecnológica será documentada conforme as decisões de desenvolvimento forem tomadas.
+```bash
+npm run dev
+```
 
-- **Frontend:** a definir.
-- **Backend:** a definir.
-- **Comunicação em tempo real:** a definir.
-- **Transmissão de áudio e vídeo:** a definir.
-- **Banco de dados:** a definir, caso necessário.
+Copie `.env.example` para `.env` se precisar alterar a configuração. O `.env` é ignorado pelo Git. Não é necessário rodar `npm install`, pois o projeto não usa pacotes externos.
 
-## 🚀 Instalação e execução
+## Como usar
 
-As instruções serão adicionadas após a definição da estrutura do projeto, das tecnologias e das dependências necessárias.
+1. Clique em **Criar uma sala**. O navegador cria uma sala temporária e mantém o token de anfitrião na sessão local.
+2. Clique em **Copiar convite** e envie o link aos espectadores.
+3. Clique em **Compartilhar tela** e escolha uma tela, janela ou aba nas opções oferecidas pelo navegador.
+4. Os espectadores abrem o convite e recebem a transmissão quando a negociação WebRTC se completa.
+5. O anfitrião pode encerrar somente a transmissão ou encerrar a sala. O espectador pode sair.
 
-## 🗺️ Roadmap
+As salas e tokens são mantidos em memória pelo processo Node. Reiniciar o servidor encerra as salas.
 
-- [ ] Definir a arquitetura e a stack tecnológica.
-- [ ] Criar a interface principal do Brutroom.
-- [ ] Implementar a criação e entrada em salas.
-- [ ] Desenvolver a conexão entre participantes.
-- [ ] Implementar o compartilhamento de tela.
-- [ ] Adicionar comunicação por voz.
-- [ ] Integrar o suporte à câmera.
-- [ ] Desenvolver convites e gerenciamento de participantes.
-- [ ] Testar desempenho, segurança e estabilidade.
-- [ ] Preparar o aplicativo para distribuição.
+## Teste entre navegadores
 
-## 🔒 Privacidade e segurança
+Execute o teste automatizado de sala, sinalização e encerramento com:
 
-A privacidade deve ser um dos princípios do Brutroom.
+```bash
+npm test
+```
 
-- O compartilhamento de tela deve depender de autorização explícita do usuário.
-- O acesso às salas deve respeitar as permissões configuradas.
-- As comunicações devem considerar mecanismos adequados de segurança e proteção de dados.
+1. Inicie o servidor em `localhost`.
+2. Em uma janela, crie a sala, copie o link e inicie o compartilhamento.
+3. Abra o link em outro navegador ou janela privada. Confirme que a imagem aparece e que o espectador não vê o controle de captura.
+4. Pare o compartilhamento pelo site e também pelo seletor do navegador; confirme o estado de espera.
+5. Encerre a sala e confirme que o link passa a informar que ela não existe mais.
 
-## 🤝 Contribuição
+Para testar em dispositivos diferentes, a aplicação precisa estar disponível por HTTPS e acessível pelos dois dispositivos. Redes diferentes podem exigir STUN/TURN; o teste só em `localhost` não valida a conectividade por TURN.
 
-O Brutroom está em desenvolvimento. Ideias, sugestões e contribuições poderão ajudar a melhorar o projeto ao longo de sua evolução.
+## Limitações
 
-## 📄 Licença
+- O estado das salas fica em memória: uma instância única é necessária e uma reinicialização apaga todas as salas.
+- WebRTC faz uma conexão direta entre o anfitrião e cada espectador. O upload do anfitrião cresce com o número de espectadores; não há SFU nem infraestrutura de escala.
+- STUN não retransmite mídia. Configure TURN para redes restritivas; sem TURN, algumas combinações de rede não conectarão.
+- Por padrão, usa-se o servidor STUN público indicado no código. Para produção, configure um serviço STUN/TURN sob seu controle.
+- O endereço de captura requer HTTPS, exceto `localhost` e outras origens que o navegador trate como seguras.
+- Não há conta, controle de acesso para espectadores, persistência, gravação, áudio ou chat.
 
-A licença será definida futuramente.
+## Implantação
 
----
+Use um host que execute Node.js 22.9+, mantenha o processo `npm start` em execução e coloque um proxy HTTPS/WSS na frente do serviço HTTP. Encaminhe WebSocket sem buffer, configure o certificado TLS e disponibilize a aplicação pela mesma origem. Defina `PORT`, `STUN_URL`, `TURN_URL` e `TURN_SHARED_SECRET` no ambiente de execução, sem colocar segredos no repositório. O estado em memória exige uma instância e não é adequado a reinicializações sem aviso ou múltiplas instâncias.
 
-**Brutroom — One room. Everyone connected.**
+Mais detalhes: [arquitetura](docs/architecture.md), [configuração](docs/configuration.md) e [implantação](docs/deployment.md).

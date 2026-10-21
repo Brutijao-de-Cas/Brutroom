@@ -1,0 +1,15 @@
+{
+  "name": "brutroom",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Compartilhamento de tela em salas temporárias com WebRTC.",
+  "engines": {
+    "node": ">=22.9"
+  },
+  "scripts": {
+    "start": "node --env-file-if-exists=.env server.js",
+    "dev": "node --env-file-if-exists=.env --watch server.js",
+    "test": "node --test"
+  }
+}

@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f6f7f8">
+    <meta name="description" content="Compartilhe sua tela em uma sala privada e simples.">
+    <title>Brutroom — Compartilhe sua tela</title>
+    <link rel="stylesheet" href="/styles.css">
+    <script src="/app.js" defer></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="Brutroom, início">
+        <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+        <span>brutroom</span>
+      </a>
+      <div id="header-state" class="header-state hidden"><span class="state-dot"></span><span id="header-state-text">Conectando</span></div>
+    </header>
+
+    <main id="home" class="home-view">
+      <section class="home-copy">
+        <div class="eyebrow"><span class="eyebrow-line"></span> COMPARTILHAMENTO SIMPLES</div>
+        <h1>Mostre sua tela.<br><span>Sem complicação.</span></h1>
+        <p>Crie uma sala, envie o link e compartilhe o que está na sua tela em tempo real.</p>
+      </section>
+
+      <section class="home-card" aria-label="Criar ou entrar em uma sala">
+        <button id="create-room" class="button button-primary button-large" type="button">
+          <span>Criar uma sala</span><span class="button-arrow" aria-hidden="true">↗</span>
+        </button>
+        <div class="divider"><span></span><small>ou entre em uma sala</small><span></span></div>
+        <form id="join-form" class="join-form">
+          <label class="sr-only" for="room-code">Link ou código da sala</label>
+          <input id="room-code" name="room" type="text" placeholder="Cole o link ou código" autocomplete="off" maxlength="120" required>
+          <button class="button button-secondary" type="submit">Entrar <span aria-hidden="true">→</span></button>
+        </form>
+        <p class="card-note"><span class="lock-icon" aria-hidden="true">◈</span> Sua tela só é compartilhada quando você permitir.</p>
+      </section>
+      <p id="home-error" class="feedback hidden" role="alert"></p>
+      <div class="home-foot"><span>SEM CADASTRO</span><i></i><span>CONEXÃO DIRETA</span><i></i><span>VOCÊ NO CONTROLE</span></div>
+    </main>
+
+    <main id="room" class="room-view hidden">
+      <div class="room-heading">
+        <div><div class="eyebrow"><span class="eyebrow-line"></span> SUA SALA</div><h1 id="room-title">Compartilhamento</h1></div>
+        <button id="copy-invite" class="button button-secondary copy-button" type="button"><span aria-hidden="true">↗</span> Copiar convite</button>
+      </div>
+
+      <section class="stage" aria-label="Tela compartilhada">
+        <video id="screen-video" autoplay playsinline muted></video>
+        <div id="stage-empty" class="stage-empty">
+          <div class="screen-icon" aria-hidden="true"><span></span><i></i></div>
+          <h2 id="stage-title">Aguardando o início</h2>
+          <p id="stage-description">A transmissão aparecerá aqui quando o anfitrião compartilhar a tela.</p>
+        </div>
+        <div class="stage-footer"><span class="live-indicator"></span><span id="stage-status">Sala pronta</span><span class="stage-room-code" id="stage-room-code"></span></div>
+      </section>
+
+      <section class="room-controls">
+        <div class="room-info"><span class="role-label" id="role-label">ANFITRIÃO</span><span id="connection-copy">Preparando sua sala</span></div>
+        <div class="control-actions">
+          <button id="share-screen" class="button button-primary" type="button"><span aria-hidden="true">▣</span> Compartilhar tela</button>
+          <button id="stop-screen" class="button button-danger hidden" type="button"><span aria-hidden="true">■</span> Encerrar transmissão</button>
+          <button id="leave-room" class="button button-quiet" type="button">Sair da sala</button>
+          <button id="close-room" class="button button-quiet hidden" type="button">Encerrar sala</button>
+        </div>
+      </section>
+      <p id="room-error" class="feedback hidden" role="alert"></p>
+    </main>
+
+    <footer class="site-footer"><span>BRUTROOM</span><span>COMPARTILHE COM CLAREZA.</span></footer>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>
